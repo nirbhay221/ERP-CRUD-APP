@@ -1,14 +1,15 @@
 import {ActionCreators} from '../app/productsReducer';
+import axios from 'axios';
+
+const axiosInstance = axios.create({
+    baseURL: 'https://localhost:44345/Products',
+});
 
 export const GetProducts = async (dispatch) => {
     try {
         //API CALL
-        const products = [
-            {id : 1, description : 'Product 1', Quantity : 5},
-            {id : 2, description : 'Product 2', Quantity : 10},
-            {id : 3, description : 'Product 3', Quantity : 15},
-        ];
-        dispatch(ActionCreators.setProducts(products))
+        const {data} = await axiosInstance.get();
+        dispatch(ActionCreators.setProducts(data))
     }
     catch {
         console.log('Error !')
@@ -16,7 +17,8 @@ export const GetProducts = async (dispatch) => {
 } 
 export const NewProduct = async (dispatch, product) => {
     try {
-        dispatch(ActionCreators.newProduct(product));
+        const {data} = await axiosInstance.post('', product);
+        dispatch(ActionCreators.newProduct(data));
     }
     catch(error) {
         console.log("Error !", error);
@@ -25,6 +27,8 @@ export const NewProduct = async (dispatch, product) => {
 
 export const EditProduct = async (dispatch , product) => {
     try{
+        
+        await axiosInstance.put('', product);
         dispatch(ActionCreators.editProduct(product));
     }
     catch{
@@ -35,6 +39,8 @@ export const EditProduct = async (dispatch , product) => {
 
 export const DeleteProduct = async (dispatch , product) => {
     try{
+        
+        await axiosInstance.delete('', product);
         dispatch(ActionCreators.deleteProduct(product));
     }
     catch{
