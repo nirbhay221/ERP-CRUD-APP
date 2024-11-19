@@ -11,8 +11,8 @@ export const GetProducts = async (dispatch) => {
         const {data} = await axiosInstance.get();
         dispatch(ActionCreators.setProducts(data))
     }
-    catch {
-        console.log('Error !')
+    catch(error) {
+        console.log('Error fetching products !!!', error)
     }
 } 
 export const NewProduct = async (dispatch, product) => {
@@ -21,29 +21,29 @@ export const NewProduct = async (dispatch, product) => {
         dispatch(ActionCreators.newProduct(data));
     }
     catch(error) {
-        console.log("Error !", error);
+        console.log("Error creating products !", error);
     }
 }
 
 export const EditProduct = async (dispatch , product) => {
     try{
         
-        await axiosInstance.put('', product);
-        dispatch(ActionCreators.editProduct(product));
+        const {data} = await axiosInstance.put('', product);
+        dispatch(ActionCreators.editProduct(data));
     }
-    catch{
-        console.log('Error !');
+    catch(error){
+        console.log('Error updating product !', error);
     }
 }
 
 
 export const DeleteProduct = async (dispatch , product) => {
     try{
-        
-        await axiosInstance.delete('', product);
+        console.log('Deleting Product:', product);
+        await axiosInstance.delete('', {data : { ...product}});
         dispatch(ActionCreators.deleteProduct(product));
     }
-    catch{
-        console.log('Error !');
+    catch(error){
+        console.log('Error deleting product !', error);
     }
 }

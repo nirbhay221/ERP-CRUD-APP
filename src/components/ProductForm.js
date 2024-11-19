@@ -21,18 +21,20 @@ export default ({product, setIsEditing}) => {
             setIsNewProduct(true);
         }
     }, [product]);
-    return <Form
-        onSubmit = {event => {
-            event.preventDefault();
-            if(isNewProduct){
-                dispatch(ActionCreators.newProduct({ description, Quantity }));
-            }
-            else{
-                dispatch(ActionCreators.editProduct({ id: product.id, description, Quantity }));
-                setIsEditing(false)
-            }
-        }}
-    >
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if(isNewProduct){
+            NewProduct(dispatch, { description, Quantity });
+        }
+        else{
+            EditProduct(dispatch, { id: product.id, description, Quantity });
+            setIsEditing(false);
+        }
+    };
+
+    return (
+    <Form onSubmit = {handleSubmit}>
         <Row>
             <Col>
                 <Form.Label>Description</Form.Label>
@@ -43,7 +45,7 @@ export default ({product, setIsEditing}) => {
             </Col>
             <Col>
                 <Form.Label>Quantity</Form.Label>
-                <Form.Control type = 'number' step = '0.1' placeholder = {Quantity} onChange = {event => setQuantity(Number(event.target.value))} />
+                <Form.Control type = 'number' step = '0.1' value = {Quantity} onChange = {event => setQuantity(Number(event.target.value))} />
             </Col>
             <div style = {{marginTop: 'auto'}}>
                 {isNewProduct ? <Button variant ='primary' type = 'submit'>Add</Button>: 
@@ -56,4 +58,5 @@ export default ({product, setIsEditing}) => {
             </div>
         </Row>
     </Form>
+    );
 }
