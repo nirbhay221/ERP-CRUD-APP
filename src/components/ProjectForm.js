@@ -21,18 +21,20 @@ export default ({project, setIsEditing}) => {
             setIsNewProject(true);
         }
     }, [project]);
-    return <Form
-        onSubmit = {event => {
-            event.preventDefault();
-            if(isNewProject){
-                dispatch(ActionCreators.newProject({ description, Quantity }));
-            }
-            else{
-                dispatch(ActionCreators.editProject({ id: project.id, description, Quantity }));
-                setIsEditing(false)
-            }
-        }}
-    >
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if(isNewProject){
+            NewProject(dispatch, { description, Quantity });
+        }
+        else{
+            EditProject(dispatch, { id: project.id, description, Quantity });
+            setIsEditing(false);
+        }
+    };
+
+    return (
+    <Form onSubmit = {handleSubmit}>
         <Row>
             <Col>
                 <Form.Label>Description</Form.Label>
@@ -43,7 +45,7 @@ export default ({project, setIsEditing}) => {
             </Col>
             <Col>
                 <Form.Label>Quantity</Form.Label>
-                <Form.Control type = 'number' step = '0.1' placeholder = {Quantity} onChange = {event => setQuantity(Number(event.target.value))} />
+                <Form.Control type = 'number' step = '0.1' value = {Quantity} onChange = {event => setQuantity(Number(event.target.value))} />
             </Col>
             <div style = {{marginTop: 'auto'}}>
                 {isNewProject ? <Button variant ='primary' type = 'submit'>Add</Button>: 
@@ -56,4 +58,5 @@ export default ({project, setIsEditing}) => {
             </div>
         </Row>
     </Form>
+    );
 }

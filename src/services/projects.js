@@ -1,43 +1,49 @@
 import {ActionCreators} from '../app/projectsReducer';
+import axios from 'axios';
+
+const axiosInstance = axios.create({
+    baseURL: 'https://localhost:44345/Projects',
+});
 
 export const GetProjects = async (dispatch) => {
     try {
         //API CALL
-        const projects = [
-            {id : 1, description : 'Project 1', Quantity : 5},
-            {id : 2, description : 'Project 2', Quantity : 10},
-            {id : 3, description : 'Project 3', Quantity : 15},
-        ];
-        dispatch(ActionCreators.setProjects(projects))
+        const {data} = await axiosInstance.get();
+        dispatch(ActionCreators.setProjects(data))
     }
-    catch {
-        console.log('Error !')
+    catch(error) {
+        console.log('Error fetching projects !!!', error)
     }
 } 
 export const NewProject = async (dispatch, project) => {
     try {
-        dispatch(ActionCreators.newProject(project));
+        const {data} = await axiosInstance.post('', project);
+        dispatch(ActionCreators.newProject(data));
     }
     catch(error) {
-        console.log("Error !", error);
+        console.log("Error creating projects !", error);
     }
 }
 
 export const EditProject = async (dispatch , project) => {
     try{
-        dispatch(ActionCreators.editProject(project));
+        
+        const {data} = await axiosInstance.put('', project);
+        dispatch(ActionCreators.editProject(data));
     }
-    catch{
-        console.log('Error !');
+    catch(error){
+        console.log('Error updating project !', error);
     }
 }
 
 
 export const DeleteProject = async (dispatch , project) => {
     try{
+        console.log('Deleting Project:', project);
+        await axiosInstance.delete('', {data : { ...project}});
         dispatch(ActionCreators.deleteProject(project));
     }
-    catch{
-        console.log('Error !');
+    catch(error){
+        console.log('Error deleting project !', error);
     }
 }
