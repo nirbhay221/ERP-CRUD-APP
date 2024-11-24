@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import productsReducer from './productsReducer';
 import projectsReducer from './projectsReducer';
 import servicesReducer from './servicesReducer';
+import { productsSlice } from './productsSlice';
 
 export const store = configureStore({
   reducer: {
-    productsReducer : productsReducer,
+    productsSlice : productsSlice.reducer,
     projectsReducer : projectsReducer,
     servicesReducer : servicesReducer,
 

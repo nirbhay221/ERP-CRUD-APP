@@ -1,4 +1,4 @@
-import {ActionCreators} from '../app/productsReducer';
+import { setProducts, newProducts, editProducts, deleteProducts } from '../app/productsSlice';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -9,7 +9,7 @@ export const GetProducts = async (dispatch) => {
     try {
         //API CALL
         const {data} = await axiosInstance.get();
-        dispatch(ActionCreators.setProducts(data))
+        dispatch(setProducts(data))
     }
     catch(error) {
         console.log('Error fetching products !!!', error)
@@ -18,7 +18,7 @@ export const GetProducts = async (dispatch) => {
 export const NewProduct = async (dispatch, product) => {
     try {
         const {data} = await axiosInstance.post('', product);
-        dispatch(ActionCreators.newProduct(data));
+        dispatch(newProducts(data));
     }
     catch(error) {
         console.log("Error creating products !", error);
@@ -29,7 +29,7 @@ export const EditProduct = async (dispatch , product) => {
     try{
         
         const {data} = await axiosInstance.put('', product);
-        dispatch(ActionCreators.editProduct(data));
+        dispatch(editProducts(data));
     }
     catch(error){
         console.log('Error updating product !', error);
@@ -41,7 +41,7 @@ export const DeleteProduct = async (dispatch , product) => {
     try{
         console.log('Deleting Product:', product);
         await axiosInstance.delete('', {data : { ...product}});
-        dispatch(ActionCreators.deleteProduct(product));
+        dispatch(deleteProducts(product));
     }
     catch(error){
         console.log('Error deleting product !', error);

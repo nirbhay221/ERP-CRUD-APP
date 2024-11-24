@@ -33,7 +33,7 @@ const ListRow = ({project}) => {
         <div>
             <Row>
                 <Col>{project.description}</Col>
-                <Col>{project.Quantity}</Col>
+                <Col>{project.quantity}</Col>
                 <Col><Button variant = "warning" onClick = {() => setIsEditing(!isEditing)}> Edit </Button></Col>
             </Row>
             <hr/>

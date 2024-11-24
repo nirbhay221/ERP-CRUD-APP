@@ -7,7 +7,7 @@ import ProductForm from './ProductForm';
 
 const ProductList = () => {
     const dispatch = useDispatch();
-    const products = useSelector(state => state.productsReducer.products);
+    const products = useSelector(state => state.productsSlice.products);
 
     useEffect(() => {
          GetProducts(dispatch);
@@ -24,7 +24,7 @@ const ProductList = () => {
 
 const ListRow = ({product}) => {
     const [isEditing, setIsEditing] = useState(false);
-
+    console.log("Product object in ListRow:", product);
     return  isEditing 
     ? 
     <ProductForm product = {product} setIsEditing = {setIsEditing}/> 
@@ -33,7 +33,7 @@ const ListRow = ({product}) => {
         <div>
             <Row>
                 <Col>{product.description}</Col>
-                <Col>{product.Quantity}</Col>
+                <Col>{product.quantity}</Col>
                 <Col><Button variant = "warning" onClick = {() => setIsEditing(!isEditing)}> Edit </Button></Col>
             </Row>
             <hr/>
