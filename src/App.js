@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import ProductForm from "./components/ProductForm";
 import ProductList from "./components/productList";
 import ProjectForm from "./components/ProjectForm";
@@ -9,6 +10,7 @@ const App = () => (
     <h3>Product Page</h3>
     <ProductForm/>
     <hr style = {{border : '1px solid grey'}} />
+    <ToastContainer></ToastContainer>
     <h3>Products</h3>
     <ProductList></ProductList>
     <h3>Project Page</h3>

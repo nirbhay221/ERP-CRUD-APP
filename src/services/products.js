@@ -1,5 +1,6 @@
 import { setProducts, newProducts, editProducts, deleteProducts } from '../app/productsSlice';
 import axios from 'axios';
+import { setProductsError, editProductsError, newProductsError, deleteProductsError } from '../app/productsSlice';
 
 const axiosInstance = axios.create({
     baseURL: 'https://localhost:44345/Products',
@@ -12,7 +13,7 @@ export const GetProducts = async (dispatch) => {
         dispatch(setProducts(data))
     }
     catch(error) {
-        console.log('Error fetching products !!!', error)
+        dispatch(setProductsError(error));
     }
 } 
 export const NewProduct = async (dispatch, product) => {
@@ -21,7 +22,7 @@ export const NewProduct = async (dispatch, product) => {
         dispatch(newProducts(data));
     }
     catch(error) {
-        console.log("Error creating products !", error);
+        dispatch(newProductsError(error));
     }
 }
 
@@ -32,7 +33,7 @@ export const EditProduct = async (dispatch , product) => {
         dispatch(editProducts(data));
     }
     catch(error){
-        console.log('Error updating product !', error);
+        dispatch(editProductsError(error));
     }
 }
 
@@ -44,6 +45,6 @@ export const DeleteProduct = async (dispatch , product) => {
         dispatch(deleteProducts(product));
     }
     catch(error){
-        console.log('Error deleting product !', error);
+        dispatch(deleteProductsError(error));
     }
 }
