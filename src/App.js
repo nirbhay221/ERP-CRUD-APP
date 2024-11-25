@@ -1,29 +1,18 @@
-import { ToastContainer } from "react-toastify";
-import ProductForm from "./components/ProductForm";
-import ProductList from "./components/productList";
-import ProjectForm from "./components/ProjectForm";
-import ProjectList from "./components/projectList";
-import ServiceForm from "./components/ServiceForm";
-import ServiceList from "./components/serviceList";
-const App = () => (
-  <div style = {{width : '60%', margin : 'auto'}}>
-    <h3>Product Page</h3>
-    <ProductForm/>
-    <hr style = {{border : '1px solid grey'}} />
-    <ToastContainer></ToastContainer>
-    <h3>Products</h3>
-    <ProductList></ProductList>
-    <h3>Project Page</h3>
-    <ProjectForm/>
-    <hr style = {{border : '1px solid grey'}} />
-    <h3>Projects</h3>
-    <ProjectList></ProjectList>
-    <h3>Services Page</h3>
-    <ServiceForm/>
-    <hr style = {{border : '1px solid grey'}} />
-    <h3>Services</h3>
-    <ServiceList></ServiceList>
-  </div>
-);
+import SignInPage from "./components/SignInPage";
+import SignUpPage from "./components/SignUp";
+import HomePage from "./components/HomePage";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { useSelector } from "react-redux";
+const App = () => {
+  const {isLoggedIn} = useSelector (state => state.authenticationSlice);
+  return <BrowserRouter>
+    <Switch>
+      <Route exact path = '/' render = {() => (isLoggedIn ? <HomePage></HomePage> : <SignInPage></SignInPage>)}></Route>
+      <Route path = '/signup' render = {() => (isLoggedIn ? <Redirect to = '/'/> : <SignUpPage></SignUpPage>)}></Route> 
+      <Route path = '/signin' render = {() => (isLoggedIn ? <Redirect to = '/'/> : <SignInPage></SignInPage>)}></Route> 
+      <Route component = {() => <h2> Page not found !</h2>} />
+    </Switch>
+  </BrowserRouter>
+};
 
 export default App;

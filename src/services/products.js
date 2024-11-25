@@ -3,7 +3,7 @@ import axios from 'axios';
 import { setProductsError, editProductsError, newProductsError, deleteProductsError } from '../app/productsSlice';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://localhost:44345/Products',
+    baseURL: `${process.env.REACT_APP_BASE_URL}/Products`,
 });
 
 export const GetProducts = async (dispatch) => {
