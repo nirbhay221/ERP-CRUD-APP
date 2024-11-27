@@ -6,6 +6,12 @@ const axiosInstance = axios.create({
     baseURL: `${process.env.REACT_APP_BASE_URL}/Products`,
 });
 
+axiosInstance.interceptors.request.use(config => {
+    config.headers ={
+        authorization : 'Bearer' + sessionStorage.getItem('token')
+    };
+    return config;
+})
 export const GetProducts = async (dispatch) => {
     try {
         //API CALL

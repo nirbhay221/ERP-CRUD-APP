@@ -19,18 +19,19 @@ export const SignUp = async (dispatch, credentials) => {
 }
 
 export const SignIn = async (dispatch, credentials) => {
-    try  {
+    try {
         const payload = {
-            id : 0 ,
-            username : credentials.username,
-            password : credentials.password,
-            email : "string",
+            id: 0,
+            username: credentials.username,
+            password: credentials.password,
+            email: "string",
         };
-        console.log("Payload: ",payload);
-        const {data} = await axiosInstance.post('/signin', payload);
+        const { data } = await axiosInstance.post('/signin', payload);
+        console.log("Login response:", data);
         dispatch(userAuthenticated(data));
-    }
-    catch(error){
-        console.log('Error!!', error);
+        return { success: true, data };
+    } catch(error) {
+        console.log('Sign In Error!!', error);
+        return { success: false, error };
     }
 }

@@ -7,7 +7,7 @@ import { authenticationSlice } from './authenticationSlice';
 
 export const store = configureStore({
   reducer: {
-    authenticationSlice: authenticationSlice,
+    authenticationSlice: authenticationSlice.reducer,
     productsSlice : productsSlice.reducer,
     projectsReducer : projectsReducer,
     servicesReducer : servicesReducer,
