@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-    config.headers = {authorization : 'Bearer' + sessionStorage.getItem('token')};
+    config.headers = {authorization : 'Bearer ' + sessionStorage.getItem('token')};
     return config;
 });
 

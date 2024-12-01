@@ -5,9 +5,9 @@ export const statisticsSlice = createSlice({
     initialState : {
         productQuantityPerCategory : [],
     },
-    reducers : {
-        setProductQuantityPerCategory : (state, action) => {
-            return { ...state, productQuantityPerCategory: {...action.payload}};
+    reducers: {
+        setProductQuantityPerCategory: (state, action) => {
+            state.productQuantityPerCategory = action.payload;
         }
     }
 })
