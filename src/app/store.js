@@ -4,6 +4,7 @@ import servicesReducer from './servicesReducer';
 import { productsSlice } from './productsSlice';
 import ToastMiddleware from '../middleware/ToastMiddleware';
 import { authenticationSlice } from './authenticationSlice';
+import { statisticsSlice } from './statisticsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     productsSlice : productsSlice.reducer,
     projectsReducer : projectsReducer,
     servicesReducer : servicesReducer,
+    statisticsReducer : statisticsSlice.reducer,
     
   },
   middleware : (getDefaultMiddleware) => getDefaultMiddleware().concat(ToastMiddleware)

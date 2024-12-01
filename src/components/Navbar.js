@@ -55,6 +55,15 @@ const Navbar = () => {
                             >
                                 Sign In
                             </NavLink>
+                            <NavLink 
+                                to="/statistics" 
+                                style={({ isActive }) => ({
+                                    ...navLinkStyle,
+                                    ...(isActive ? activeStyle : {})
+                                })}
+                            >
+                                Statistics
+                            </NavLink>
                         </div>
                     )}
                 </div>

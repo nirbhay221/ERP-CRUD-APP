@@ -6,6 +6,7 @@ import HomePage from "./components/HomePage";
 import { useEffect } from "react";
 import { userAuthenticated } from "./app/authenticationSlice";
 import { Navbar } from "react-bootstrap";
+import StatisticsPage from "./components/StatisticsPage";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => 
@@ -35,6 +36,10 @@ const App = () => {
         <Route 
           path="/signin" 
           element={isLoggedIn ? <Navigate to="/" /> : <SignInPage />} 
+        />
+        <Route 
+          path="/statistics" 
+          element={isLoggedIn ? <StatisticsPage/>: <SignInPage />} 
         />
         <Route 
           path="*" 
