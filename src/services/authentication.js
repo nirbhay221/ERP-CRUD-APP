@@ -28,8 +28,14 @@ export const SignIn = async (dispatch, credentials) => {
         };
         const { data } = await axiosInstance.post('/signin', payload);
         console.log("Login response:", data);
-        dispatch(userAuthenticated(data));
-        return { success: true, data };
+        dispatch(userAuthenticated({
+            token: data.token,  
+            userName: data.userName, 
+            userId: data.id
+        }));
+        return { success: true, data : {
+            ...data, userId: data.id
+        }};
     } catch(error) {
         console.log('Sign In Error!!', error);
         return { success: false, error };

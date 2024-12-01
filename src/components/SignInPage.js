@@ -20,10 +20,11 @@ const SignInPage = () => {
             console.log("Session Storage Item" , sessionStorage.getItem('token'));
             if (result.success) {
                 dispatch(userAuthenticated({
-                    token: result.token,  
-                    userName: result.userName,  
+                    token: result.data.token,  
+                    userName: result.data.userName,  
                 }));
-                console.log("Session Storage Item after dispatch: ", sessionStorage.getItem('token'));  // Check after dispatch
+                console.log("Session Storage Item after dispatch: ", sessionStorage.getItem('token')); 
+                
 
                 navigate('/');
             }

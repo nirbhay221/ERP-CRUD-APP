@@ -14,14 +14,15 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const token = sessionStorage.getItem('token');
-    if (token !== undefined && token !== null){
+    if (token){
       dispatch(userAuthenticated({token}));
     }
-  }, []);
+  }, [dispatch]);
+
   console.log("Logged In", isLoggedIn)
   return (
     <BrowserRouter>
-    <Navbar></Navbar>
+    <Navbar />
       <Routes>
         <Route 
           path="/" 
