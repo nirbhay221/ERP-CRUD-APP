@@ -5,8 +5,8 @@ import SignUpPage from "./components/SignUp";
 import HomePage from "./components/HomePage";
 import { useEffect } from "react";
 import { userAuthenticated } from "./app/authenticationSlice";
-import { Navbar } from "react-bootstrap";
 import StatisticsPage from "./components/StatisticsPage";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => 
