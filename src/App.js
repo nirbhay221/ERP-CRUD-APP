@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { userAuthenticated } from "./app/authenticationSlice";
 import StatisticsPage from "./components/StatisticsPage";
 import Navbar from "./components/Navbar";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => 
@@ -40,6 +41,10 @@ const App = () => {
         <Route 
           path="/statistics" 
           element={isLoggedIn ? <StatisticsPage/>: <SignInPage />} 
+        />
+        <Route 
+          path="/dashboard" 
+          element={isLoggedIn ? <Dashboard/>: <Dashboard />} 
         />
         <Route 
           path="*" 

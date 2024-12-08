@@ -39,6 +39,15 @@ const Navbar = () => {
                     >
                         Statistics
                     </NavLink>
+                    <NavLink 
+                        to="/dashboard" 
+                        style={({ isActive }) => ({
+                            ...navLinkStyle,
+                            ...(isActive ? activeStyle : {})
+                        })}
+                    >
+                        Dashboard
+                    </NavLink>
                     
                     <Button 
                             variant='outline-primary' 
