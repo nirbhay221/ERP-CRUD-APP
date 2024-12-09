@@ -1,12 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
-import { 
-    Chart as ChartJS, 
-    ArcElement, 
-    Tooltip, 
-    Legend 
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -56,8 +51,30 @@ const Dashboard = () => {
         <div style={{ maxWidth: "1200px", margin: "auto", padding: "20px" }}>
             <h3>Dashboard</h3>
             <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-                <div style={{ flex: 2 }}>
-                    <h5>Product Table</h5>
+                <div
+                    style={{
+                        flex: 2,
+                        backgroundColor: "#fff",
+                        border: "1px solid #ddd",
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        padding: "20px",
+                        cursor: "pointer",
+                        transition: "transform 0.2s, box-shadow 0.2s",
+                    }}
+                    onClick={() => navigate("/products")}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.02)";
+                        e.currentTarget.style.boxShadow =
+                            "0 8px 16px rgba(0, 0, 0, 0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow =
+                            "0 4px 8px rgba(0, 0, 0, 0.1)";
+                    }}
+                >
+                    <h5 style={{ marginBottom: "10px" }}>Product Table</h5>
                     <table
                         style={{
                             width: "100%",
@@ -67,29 +84,73 @@ const Dashboard = () => {
                     >
                         <thead>
                             <tr>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>ID</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Name</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Category</th>
-                                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Quantity</th>
+                                <th
+                                    style={{
+                                        border: "1px solid #ddd",
+                                        padding: "8px",
+                                    }}
+                                >
+                                    ID
+                                </th>
+                                <th
+                                    style={{
+                                        border: "1px solid #ddd",
+                                        padding: "8px",
+                                    }}
+                                >
+                                    Name
+                                </th>
+                                <th
+                                    style={{
+                                        border: "1px solid #ddd",
+                                        padding: "8px",
+                                    }}
+                                >
+                                    Category
+                                </th>
+                                <th
+                                    style={{
+                                        border: "1px solid #ddd",
+                                        padding: "8px",
+                                    }}
+                                >
+                                    Quantity
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {productData.map((product) => (
-                                <tr
-                                    key={product.id}
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => navigate("/products")}
-                                >
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                                <tr key={product.id}>
+                                    <td
+                                        style={{
+                                            border: "1px solid #ddd",
+                                            padding: "8px",
+                                        }}
+                                    >
                                         {product.id}
                                     </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                                    <td
+                                        style={{
+                                            border: "1px solid #ddd",
+                                            padding: "8px",
+                                        }}
+                                    >
                                         {product.name}
                                     </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                                    <td
+                                        style={{
+                                            border: "1px solid #ddd",
+                                            padding: "8px",
+                                        }}
+                                    >
                                         {product.category}
                                     </td>
-                                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                                    <td
+                                        style={{
+                                            border: "1px solid #ddd",
+                                            padding: "8px",
+                                        }}
+                                    >
                                         {product.quantity}
                                     </td>
                                 </tr>
@@ -97,16 +158,31 @@ const Dashboard = () => {
                         </tbody>
                     </table>
                 </div>
-                <div style={{ flex: 1 }}>
-                    <h5>Statistics</h5>
-                    <div
-                        style={{
-                            height: "300px",
-                            marginBottom: "20px",
-                            cursor: "pointer",
-                        }}
-                        onClick={() => navigate("/statistics")}
-                    >
+                <div
+                    style={{
+                        flex: 1,
+                        backgroundColor: "#fff",
+                        border: "1px solid #ddd",
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        padding: "20px",
+                        cursor: "pointer",
+                        transition: "transform 0.2s, box-shadow 0.2s",
+                    }}
+                    onClick={() => navigate("/statistics")}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.02)";
+                        e.currentTarget.style.boxShadow =
+                            "0 8px 16px rgba(0, 0, 0, 0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow =
+                            "0 4px 8px rgba(0, 0, 0, 0.1)";
+                    }}
+                >
+                    <h5 style={{ marginBottom: "10px" }}>Statistics</h5>
+                    <div style={{ height: "300px" }}>
                         <Doughnut data={chartData} options={chartOptions} />
                     </div>
                 </div>
