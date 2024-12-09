@@ -25,7 +25,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   const menus = [
-    { name: "Dashboard", link: "/", icon: MdOutlineDashboard },
+    { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
     { name: "User", link: "/user", icon: AiOutlineUser },
     { name: "Products", link: "/products", icon: SiMaterialdesignicons },
     { name: "Projects", link: "/projects", icon: GrProjects },
@@ -45,50 +45,54 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="flex">
-        <div
-          className={`bg-gray-900 min-h-screen ${
-            open ? "w-72" : "w-16"
-          } duration-500 text-gray-100 px-4`}
-        >
-          <div className="py-3 flex justify-end">
-            <HiMenuAlt3
-              size={26}
-              className="cursor-pointer text-gray-300 hover:text-gray-100"
-              onClick={() => setOpen(!open)}
-            />
-          </div>
-          <div className="mt-4 flex flex-col gap-4">
-            {menus.map((menu, i) => (
-              <Link
-                to={menu.link}
-                key={i}
-                className={`${
-                  menu.margin && "mt-10"
-                } group flex items-center gap-4 text-sm font-medium p-2 hover:bg-gray-800 rounded-md no-underline text-gray-300`}
-              >
-                <div className="flex items-center justify-center">
-                  {React.createElement(menu.icon, { size: "20" })}
-                </div>
-                <h2
-                  style={{ transitionDelay: `${i + 3}00ms` }}
-                  className={`whitespace-pre duration-500 ${
-                    !open && "opacity-0 translate-x-28 overflow-hidden"
-                  } text-sm`}
-                >
-                  {menu.name}
-                </h2>
-                <h2
+        {
+          isLoggedIn ? (<div
+            className={`bg-gray-900 min-h-screen ${
+              open ? "w-72" : "w-16"
+            } duration-500 text-gray-100 px-4`}
+          >
+            <div className="py-3 flex justify-end">
+              <HiMenuAlt3
+                size={26}
+                className="cursor-pointer text-gray-300 hover:text-gray-100"
+                onClick={() => setOpen(!open)}
+              />
+            </div>
+            <div className="mt-4 flex flex-col gap-4">
+              {menus.map((menu, i) => (
+                <Link
+                  to={menu.link}
+                  key={i}
                   className={`${
-                    open && "hidden"
-                  } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit text-sm`}
+                    menu.margin && "mt-10"
+                  } group flex items-center gap-4 text-sm font-medium p-2 hover:bg-gray-800 rounded-md no-underline text-gray-300`}
                 >
-                  {menu.name}
-                </h2>
-              </Link>
-            ))}
+                  <div className="flex items-center justify-center">
+                    {React.createElement(menu.icon, { size: "20" })}
+                  </div>
+                  <h2
+                    style={{ transitionDelay: `${i + 3}00ms` }}
+                    className={`whitespace-pre duration-500 ${
+                      !open && "opacity-0 translate-x-28 overflow-hidden"
+                    } text-sm`}
+                  >
+                    {menu.name}
+                  </h2>
+                  <h2
+                    className={`${
+                      open && "hidden"
+                    } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit text-sm`}
+                  >
+                    {menu.name}
+                  </h2>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-
+  ) : (
+    <></>
+  )
+        }
         <div className="flex-1 bg-gray-100">
           <Navbar />
           <Routes>

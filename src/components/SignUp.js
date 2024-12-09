@@ -42,7 +42,7 @@ const SignUpPage = () => {
                 margin : 'auto', display : 'block', width : '10rem'
             }} disabled = {password !== confirmPassword || password.length <= 0}>
 
-                SignUp
+                Sign Up
             </Button>
         </Form>
 

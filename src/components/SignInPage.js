@@ -26,7 +26,7 @@ const SignInPage = () => {
                 console.log("Session Storage Item after dispatch: ", sessionStorage.getItem('token')); 
                 
 
-                navigate('/');
+                navigate('/dashboard');
             }
         } catch (error) {
             console.error("Navigation error:", error);
@@ -52,7 +52,7 @@ const SignInPage = () => {
             <Button type = 'submit' variant = 'primary' style = {{
                 margin : 'auto', display : 'block', width : '10rem'
             }} >
-                SignIn
+                Sign In
             </Button>
         </Form>
 
