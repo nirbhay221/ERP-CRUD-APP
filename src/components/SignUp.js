@@ -17,7 +17,7 @@ const SignUpPage = () => {
         }}>
             <h4 stype = {{
                 textAlign : 'center'
-            }}>Welcome Back</h4>
+            }}>Welcome !!</h4>
             <InputGroup className = 'mb-3'>
                 <FormControl placeholder = 'Username'
                 onChange = {event => setUsername(event.target.value)}>

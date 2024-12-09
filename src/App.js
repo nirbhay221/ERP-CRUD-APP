@@ -99,7 +99,7 @@ const App = () => {
             <Route path="/" element={isLoggedIn ? <HomePage /> : <SignInPage />} />
             <Route
               path="/signup"
-              element={isLoggedIn ? <Navigate to="/" /> : <SignUpPage />}
+              element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignUpPage />}
             />
             <Route
               path="/products"
@@ -107,7 +107,7 @@ const App = () => {
             />
             <Route
               path="/signin"
-              element={isLoggedIn ? <Navigate to="/" /> : <SignInPage />}
+              element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignInPage />}
             />
             <Route
               path="/statistics"

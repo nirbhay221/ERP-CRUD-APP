@@ -16,16 +16,6 @@ const HomePage = () => {
       <ToastContainer/>
       <h3>Products</h3>
       <ProductList/>
-      <h3>Project Page</h3>
-      <ProjectForm/>
-      <hr style={{ border: '1px solid grey' }} />
-      <h3>Projects</h3>
-      <ProjectList/>
-      <h3>Services Page</h3>
-      <ServiceForm/>
-      <hr style={{ border: '1px solid grey' }} />
-      <h3>Services</h3>
-      <ServiceList/>
     </div>
   );
 }
