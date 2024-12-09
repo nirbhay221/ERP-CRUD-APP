@@ -1,6 +1,5 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import projectsReducer from './projectsReducer';
-import servicesReducer from './servicesReducer';
 import { productsSlice } from './productsSlice';
 import ToastMiddleware from '../middleware/ToastMiddleware';
 import { authenticationSlice } from './authenticationSlice';
@@ -11,7 +10,6 @@ export const store = configureStore({
     authenticationSlice: authenticationSlice.reducer,
     productsSlice : productsSlice.reducer,
     projectsReducer : projectsReducer,
-    servicesReducer : servicesReducer,
     statisticsReducer : statisticsSlice.reducer,
     
   },

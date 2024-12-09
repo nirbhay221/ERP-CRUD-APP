@@ -3,8 +3,6 @@ import ProductForm from "./ProductForm";
 import ProductList from "./productList";
 import ProjectForm from "./ProjectForm";
 import ProjectList from "./projectList";
-import ServiceForm from "./ServiceForm";
-import ServiceList from "./serviceList";
 
 const HomePage = () => {
   console.log('Home')
