@@ -1,4 +1,4 @@
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Form, Button, Table } from "react-bootstrap";
 import { React, useState, useEffect } from 'react';
 import { DeleteProduct, EditProduct, NewProduct } from "../services/products";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ export default ({ product, setIsEditing }) => {
         return state.authenticationSlice.userId;
     });
     console.log("USER ID : ", userId);
+
     useEffect(() => {
         console.log('Current userId in ProductForm:', userId);
         
@@ -28,16 +29,10 @@ export default ({ product, setIsEditing }) => {
         }
     }, [product, userId]);
 
-
     const handleSubmit = (event) => {
         event.preventDefault();
 
         console.log('Submitting product with userId:', userId);
-
-        // if (!userId) {
-        //     alert('Could not retrieve user ID. Please log out and log in again.');
-        //     return;
-        // }
 
         if (isNewProduct) {
             NewProduct(dispatch, {
@@ -54,31 +49,41 @@ export default ({ product, setIsEditing }) => {
             setIsEditing(false);
         }
     };
+
     return (
         <Form onSubmit={handleSubmit}>
-            <Row>
-                <Col>
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control as="select" value={description} onChange={event => setDescription(event.target.value)}>
-                        {descriptions.map((d, index) => <option key={index}>{d}</option>)}
-                    </Form.Control>
-                </Col>
-                <Col>
-                    <Form.Label>Quantity</Form.Label>
-                    <Form.Control type="number" step="0.1" value={Quantity} onChange={event => setQuantity(Number(event.target.value))} />
-                </Col>
-                <div style={{ marginTop: 'auto' }}>
-                    {isNewProduct ? (
-                        <Button variant="primary" type="submit">Add</Button>
-                    ) : (
-                        <div>
-                            <Button style={{ marginRight: '2px' }} variant="danger" onClick={() => DeleteProduct(dispatch, product)}>Delete</Button>
-                            <Button style={{ marginRight: '2px' }} variant="success" type="submit">Save</Button>
-                            <Button style={{ marginRight: '2px' }} variant="default" onClick={() => setIsEditing(false)}>Cancel</Button>
-                        </div>
-                    )}
-                </div>
-            </Row>
+            <Table striped bordered hover responsive>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <Form.Control as="select" value={description} onChange={event => setDescription(event.target.value)}>
+                                {descriptions.map((d, index) => <option key={index}>{d}</option>)}
+                            </Form.Control>
+                        </td>
+                        <td>
+                            <Form.Control type="number" step="0.1" value={Quantity} onChange={event => setQuantity(Number(event.target.value))} />
+                        </td>
+                        <td>
+                            {isNewProduct ? (
+                                <Button variant="primary" type="submit">Add</Button>
+                            ) : (
+                                <div>
+                                    <Button style={{ marginRight: '2px' }} variant="danger" onClick={() => DeleteProduct(dispatch, product)}>Delete</Button>
+                                    <Button style={{ marginRight: '2px' }} variant="success" type="submit">Save</Button>
+                                    <Button style={{ marginRight: '2px' }} variant="default" onClick={() => setIsEditing(false)}>Cancel</Button>
+                                </div>
+                            )}
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
         </Form>
     );
 };

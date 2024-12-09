@@ -1,46 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: #1E1E2F; 
+  color: #FFFFFF;
 }
 
 :root {
-  --bg: #242526;
-  --bg-accent: #484a4d;
-  --text-color: #dadce1;
+  --bg: #1E1E2F; 
+  --bg-accent: #27293D; 
+  --text-color: #FFFFFF;
+  --text-secondary: #A9A9B8;
+  --highlight-color: #4A90E2; 
   --nav-size: 60px;
-  --border: 1px solid #474a4d;
+  --border: 1px solid #3C3F51; 
   --border-radius: 8px;
   --speed: 500ms;
 }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
 a {
-  color : var(--text-color);
+  color: var(--highlight-color); 
   text-decoration: none;
 }
 
 .navbar {
   height: var(--nav-size);
-  background-color: var(--bg);
+  background-color: var(--bg-accent); 
   padding: 0 1rem;
   border-bottom: var(--border);
 }
@@ -48,39 +37,65 @@ a {
 .navbar-nav {
   max-width: 100%;
   height: 100%;
-  display : flex;
+  display: flex;
   justify-content: flex-end;
 }
 
-
 .nav-item {
-  width: calc(var(--nav-size)*0.8);
+  width: calc(var(--nav-size) * 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.icon-button{
-  --button-size: calc(var(--nav-size)*0.6);
+.icon-button {
+  --button-size: calc(var(--nav-size) * 0.6);
   width: var(--button-size);
   height: var(--button-size);
-  background-color: #484a4d;
+  background-color: var(--bg-accent);
   border-radius: 50%;
   padding: 5px;
   margin: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-color);
+  transition: background-color var(--speed), transform var(--speed);
 }
 
 .icon-button:hover {
-  filter: brightness(1.2);
-  color : white;
+  background-color: var(--highlight-color);
+  transform: scale(1.1);
+  color: #FFFFFF;
+}
+
+.sidebar {
+  background-color: var(--bg-accent);
+  color: var(--text-color);
+  height: 100vh;
+  padding: 1rem;
+}
+
+.sidebar ul {
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+.sidebar li a {
+  color: var(--text-color);
+}
+
+.sidebar li a:hover {
+  color: var(--highlight-color);
 }
 
 @media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
