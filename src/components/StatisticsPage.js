@@ -159,7 +159,6 @@ const StatisticsPage = () => {
 
             <div style={{ display: "flex", flexDirection: "row", gap: "20px", justifyContent: "space-between" }}>
                 <div style={{ flex: 1, height: "400px" }}>
-                    <h5>Pie Chart</h5>
                     {chartData.labels.length > 0 ? (
                         <Doughnut data={doughnutData} options={doughnutOptions} />
                     ) : (
@@ -168,7 +167,6 @@ const StatisticsPage = () => {
                 </div>
 
                 <div style={{ flex: 1, height: "400px" }}>
-                    <h5>Bar Chart</h5>
                     {chartData.labels.length > 0 ? (
                         <Bar data={barData} options={barOptions} />
                     ) : (
