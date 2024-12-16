@@ -2,7 +2,7 @@ import { createSlice, createAction } from "@reduxjs/toolkit";
 
 export const setProductsError = createAction('setProductsError');
 export const newProductsError = createAction('newProductsError');
-export const editProductsError = createAction('newProductsError');
+export const editProductsError = createAction('editProductsError');
 export const deleteProductsError = createAction('deleteProductsError');
 
 

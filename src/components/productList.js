@@ -32,8 +32,10 @@ const ListRow = ({product}) => {
     (
         <div>
             <Row>
+                <Col>{product.name}</Col>
                 <Col>{product.description}</Col>
                 <Col>{product.quantity}</Col>
+                <Col>{product.licenseType}</Col>
                 <Col><Button variant = "warning" onClick = {() => setIsEditing(!isEditing)}> Edit </Button></Col>
             </Row>
             <hr/>

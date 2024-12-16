@@ -16,14 +16,18 @@ const ProductListView = () => {
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Description</th>
                     <th>Quantity</th>
+                    <th>License Type</th>
                 </tr>
             </thead>
             <tbody>
                 {products.map((product) => (
                     <tr key={product.id}>
+                        <td>{product.name}</td>
                         <td>{product.description}</td>
                         <td>{product.quantity}</td>
+                        <td>{product.licenseType}</td>
                     </tr>
                 ))}
             </tbody>

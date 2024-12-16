@@ -7,7 +7,7 @@ import ProjectForm from './ProjectForm';
 
 const ProjectList = () => {
     const dispatch = useDispatch();
-    const projects = useSelector(state => state.projectsReducer.projects);
+    const projects = useSelector(state => state.projectsSlice.projects);
 
     useEffect(() => {
          GetProjects(dispatch);
@@ -24,7 +24,7 @@ const ProjectList = () => {
 
 const ListRow = ({project}) => {
     const [isEditing, setIsEditing] = useState(false);
-
+    console.log("Project object in ListRow:", project);
     return  isEditing 
     ? 
     <ProjectForm project = {project} setIsEditing = {setIsEditing}/> 
@@ -32,6 +32,7 @@ const ListRow = ({project}) => {
     (
         <div>
             <Row>
+                <Col>{project.name}</Col>
                 <Col>{project.description}</Col>
                 <Col>{project.quantity}</Col>
                 <Col><Button variant = "warning" onClick = {() => setIsEditing(!isEditing)}> Edit </Button></Col>

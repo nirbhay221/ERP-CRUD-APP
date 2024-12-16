@@ -10,7 +10,7 @@ export const store = configureStore({
   reducer: {
     authenticationSlice: authenticationSlice.reducer,
     productsSlice : productsSlice.reducer,
-    projectsReducer : projectsReducer,
+    projectsSlice : projectsReducer,
     servicesReducer : servicesReducer,
     statisticsReducer : statisticsSlice.reducer,
     

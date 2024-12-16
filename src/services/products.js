@@ -36,7 +36,26 @@ export const GetProducts = async (dispatch) => {
 
 export const NewProduct = async (dispatch, product) => {
     try {
-        const { data } = await axiosInstance.post('/', product);
+        const licenseTypeMapping = {
+            "Free": 0,
+            "Paid": 1,
+            "OpenSource": 2
+        };
+
+        const productWithEnum = {
+            ...product,
+            licenseType: licenseTypeMapping[product.licenseType], 
+            productDto: { 
+                name: product.name,
+                description: product.description,
+                quantity: product.quantity,
+                licenseType: licenseTypeMapping[product.licenseType],
+                userId: product.User,
+                ProductProjects: product.ProductProjects || [] 
+            }
+        };
+
+        const { data } = await axiosInstance.post('/', productWithEnum);
         console.log("New Product Added:", data);
         dispatch(newProducts(data));
     } catch (error) {
@@ -46,15 +65,31 @@ export const NewProduct = async (dispatch, product) => {
     }
 };
 
+
 export const EditProduct = async (dispatch, product) => {
     try {
-        const { data } = await axiosInstance.put('/', product);
+        console.log('Product before sending:', product);
+
+        const licenseTypeMapping = {
+            "Free": 0,
+            "Paid": 1,
+            "OpenSource": 2
+        };
+
+        const productWithEnum = {
+            ...product,
+            licenseType: licenseTypeMapping[product.licenseType] || product.licenseType, 
+        };
+
+        const { data } = await axiosInstance.put(`/${product.id}`, productWithEnum);
+        
         dispatch(editProducts(data));
     } catch (error) {
         console.error('Error editing product:', error.response ? error.response.data : error.message);
         dispatch(editProductsError(error.response ? error.response.data : error.message));
     }
 };
+
 
 export const DeleteProduct = async (dispatch, product) => {
     try {

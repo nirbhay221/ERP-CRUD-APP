@@ -1,62 +1,163 @@
-import {Form, Row, Col, Button} from "react-bootstrap";
-import {React, useState, useEffect } from 'react';
-import { DeleteProject, EditProject, NewProject } from "../services/projects";
-import { useDispatch } from "react-redux";
-import { ActionCreators } from "../app/projectsReducer";
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Table } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { NewProject, EditProject, DeleteProject } from '../services/projects';
 
-export default ({project, setIsEditing}) => {
-    const descriptions = ['Project1' , 'Project2' , 'Project3', 'Project4'];
-    const [Quantity, setQuantity] = useState(0); 
-    const [description, setDescription] = useState(descriptions[0]);
+const ProjectForm = ({ project, setIsEditing }) => {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [userProjects, setUserProjects] = useState([]);
+    const [productProjects, setProductProjects] = useState([]);
     const [isNewProject, setIsNewProject] = useState(true);
     const dispatch = useDispatch();
+    
+    const users = useSelector((state) => state.users || []);
+    const products = useSelector((state) => state.products || []);
 
-    useEffect( () => {
-        if (project !== undefined){
+    useEffect(() => {
+        if (project !== undefined) {
             setIsNewProject(false);
-            setQuantity(project.Quantity);
+            setName(project.name);
             setDescription(project.description);
-        }
-        else{
+            setUserProjects(project.UserProjects || []);
+            setProductProjects(project.ProductProjects || []);
+        } else {
             setIsNewProject(true);
         }
     }, [project]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(isNewProject){
-            NewProject(dispatch, { description, Quantity });
+        const projectPayload = {
+            name,
+            description,
+            UserProjects: userProjects,  
+            ProductProjects: productProjects
+        };
+
+        if (project && !isNewProject) {
+            projectPayload.id = project.id;
         }
-        else{
-            EditProject(dispatch, { id: project.id, description, Quantity });
+
+        if (isNewProject) {
+            NewProject(dispatch, projectPayload);
+        } else {
+            EditProject(dispatch, projectPayload);
             setIsEditing(false);
         }
     };
 
+    const handleUserChange = (e) => {
+        const selectedUsers = Array.from(e.target.selectedOptions, option => option.value);
+        setUserProjects(selectedUsers);
+    };
+
+    const handleProductChange = (e) => {
+        const selectedProducts = Array.from(e.target.selectedOptions, option => option.value);
+        setProductProjects(selectedProducts);
+    };
+
     return (
-    <Form onSubmit = {handleSubmit}>
-        <Row>
-            <Col>
-                <Form.Label>Description</Form.Label>
-                <Form.Control as = 'select' value = {description} onChange = 
-                {event => setDescription(event.target.value)}>
-                        {descriptions.map((d, index) => <option key = {index}>{d}</option>)}
-                      </Form.Control>
-            </Col>
-            <Col>
-                <Form.Label>Quantity</Form.Label>
-                <Form.Control type = 'number' step = '0.1' value = {Quantity} onChange = {event => setQuantity(Number(event.target.value))} />
-            </Col>
-            <div style = {{marginTop: 'auto'}}>
-                {isNewProject ? <Button variant ='primary' type = 'submit'>Add</Button>: 
-                <div>
-                    <Button style = {{marginRight : '2px'}} variant ='danger' onClick={() => DeleteProject(dispatch, project)}>Delete</Button>
-                    <Button style = {{marginRight : '2px'}} variant ='success' type = 'submit'>Save</Button>
-                    <Button style = {{marginRight : '2px'}} variant ='default' onClick = {() => setIsEditing(false)}>Cancel</Button>
-                    </div>
-                    }
-            </div>
-        </Row>
-    </Form>
+        <Form onSubmit={handleSubmit}>
+            <Table striped bordered hover responsive>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Users</th>
+                        <th>Products</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <Form.Control
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </td>
+                        <td>
+                            <Form.Control
+                                type="text"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
+                        </td>
+                        <td>
+                            <Form.Control
+                                as="select"
+                                multiple
+                                value={userProjects}
+                                onChange={handleUserChange}
+                            >
+                                {users.length > 0 ? (
+                                    users.map((user) => (
+                                        <option key={user.id} value={user.id}>
+                                            {user.name}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option>No users available</option>
+                                )}
+                            </Form.Control>
+                        </td>
+                        <td>
+                            <Form.Control
+                                as="select"
+                                multiple
+                                value={productProjects}
+                                onChange={handleProductChange}
+                            >
+                                {products.length > 0 ? (
+                                    products.map((product) => (
+                                        <option key={product.id} value={product.id}>
+                                            {product.name}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option>No products available</option>
+                                )}
+                            </Form.Control>
+                        </td>
+                        <td>
+                            {isNewProject ? (
+                                <Button variant="primary" type="submit">
+                                    Add
+                                </Button>
+                            ) : (
+                                <div>
+                                    <Button
+                                        variant="danger"
+                                        onClick={() => DeleteProject(dispatch, project)}
+                                    >
+                                        Delete
+                                    </Button>
+                                    <Button
+                                        variant="success"
+                                        type="submit"
+                                        style={{ marginLeft: "5px" }}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
+                                        style={{ marginLeft: "5px" }}
+                                        onClick={() => setIsEditing(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
+                            )}
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
+        </Form>
     );
-}
+};
+
+export default ProjectForm;
