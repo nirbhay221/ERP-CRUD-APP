@@ -17,6 +17,10 @@ import Dashboard from "./components/Dashboard";
 import { userAuthenticated } from "./app/authenticationSlice";
 import ProductForm from "./components/ProductForm";
 import ProductsPage from "./components/ProductsPage";
+import ProjectForm from "./components/ProjectForm";
+import ProjectsPage from "./components/projectsPage";
+import EventsPage from "./components/eventsPage";
+
 
 const App = () => {
   const isLoggedIn = useSelector((state) =>
@@ -24,6 +28,7 @@ const App = () => {
   );
   const dispatch = useDispatch();
 
+  const [isEditing, setIsEditing] = useState(false);
   const menus = [
     { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
     { name: "User", link: "/user", icon: AiOutlineUser },
@@ -45,6 +50,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="flex">
+<<<<<<< Updated upstream
         {
           isLoggedIn ? (<div
             className={`bg-gray-900 min-h-screen ${
@@ -63,6 +69,41 @@ const App = () => {
                 <Link
                   to={menu.link}
                   key={i}
+=======
+        {isLoggedIn ? (<div
+          className={`bg-gray-900 min-h-screen ${
+            open ? "w-72" : "w-16"
+          } duration-500 text-gray-100 px-4`}
+        >
+          <div className="py-3 flex justify-end">
+            <HiMenuAlt3
+              size={26}
+              className="cursor-pointer text-gray-300 hover:text-gray-100"
+              onClick={() => setOpen(!open)}
+            />
+          </div>
+          <div className="mt-4 flex flex-col gap-4">
+            {menus.map((menu, i) => (
+              <Link
+                to={menu.link}
+                key={i}
+                className={`${
+                  menu.margin && "mt-10"
+                } group flex items-center gap-4 text-sm font-medium p-2 hover:bg-gray-800 rounded-md no-underline text-gray-300`}
+              >
+                <div className="flex items-center justify-center">
+                  {React.createElement(menu.icon, { size: "20" })}
+                </div>
+                <h2
+                  style={{ transitionDelay: `${i + 3}00ms` }}
+                  className={`whitespace-pre duration-500 ${
+                    !open && "opacity-0 translate-x-28 overflow-hidden"
+                  } text-sm`}
+                >
+                  {menu.name}
+                </h2>
+                <h2
+>>>>>>> Stashed changes
                   className={`${
                     menu.margin && "mt-10"
                   } group flex items-center gap-4 text-sm font-medium p-2 hover:bg-gray-800 rounded-md no-underline text-gray-300`}
@@ -89,10 +130,15 @@ const App = () => {
               ))}
             </div>
           </div>
+<<<<<<< Updated upstream
   ) : (
     <></>
   )
         }
+=======
+        </div>
+) : (<div/>)}
+>>>>>>> Stashed changes
         <div className="flex-1 bg-gray-100">
           <Navbar />
           <Routes>
@@ -105,6 +151,9 @@ const App = () => {
               path="/products"
               element={isLoggedIn ? <ProductsPage/> : <SignUpPage />}
             />
+            <Route path = "/projects" element = {isLoggedIn ? <ProjectsPage></ProjectsPage>: <SignUpPage/>} />
+            <Route path = "/events" element = {isLoggedIn ? <EventsPage />: <SignUpPage/>} />
+
             <Route
               path="/signin"
               element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignInPage />}

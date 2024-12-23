@@ -9,6 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 const Dashboard = () => {
     const dispatch = useDispatch();
+    
     const productQuantityPerCategory = useSelector(
         (state) => state.statisticsReducer?.productQuantityPerCategory || []
     );
