@@ -1,98 +1,107 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Table, Row, Col, ListGroup } from 'react-bootstrap';
+import { Form, Button, Row, Col, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { NewProject, EditProject, DeleteProject } from '../services/projects';
+import { NewEvent, EditEvent, DeleteEvent } from '../services/events';
 import { GetUsers } from '../services/users';
-import { GetProducts } from '../services/products';
-import { ProjectStatus } from '../services/projectStatus';
+import { GetProjects } from '../services/projects';
+import { EventStatus } from '../services/events';
+import { format } from 'date-fns';
 
-const ProjectForm = ({ project, setIsEditing, onComplete }) => {
+const EventForm = ({ event, setIsEditing, onComplete }) => {
     const initialFormState = {
         name: '',
         description: '',
-        status: ProjectStatus.NotStarted.toString(),
+        status: EventStatus.Planned.toString(),
+        date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+        location: '',
         dateOfCompletion: null,
-        userProjects: [],
-        productProjects: []
+        userEvents: [],
+        eventProjects: []
     };
 
     const [formData, setFormData] = useState(initialFormState);
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const [selectedProducts, setSelectedProducts] = useState([]);
-    const [isNewProject, setIsNewProject] = useState(true);
+    const [selectedProjects, setSelectedProjects] = useState([]);
+    const [isNewEvent, setIsNewEvent] = useState(true);
     
     const dispatch = useDispatch();
     const users = useSelector((state) => state.usersSlice.users);
-    const products = useSelector((state) => state.productsSlice.products);
+    const projects = useSelector((state) => state.projectsSlice.projects);
 
     useEffect(() => {
         GetUsers(dispatch);
-        GetProducts(dispatch);
+        GetProjects(dispatch);
     }, [dispatch]);
 
     const resetForm = () => {
         setFormData(initialFormState);
         setSelectedUsers([]);
-        setSelectedProducts([]);
-        setIsNewProject(true);
+        setSelectedProjects([]);
+        setIsNewEvent(true);
     };
 
     useEffect(() => {
-        if (project) {
-            setIsNewProject(false);
+        if (event) {
+            setIsNewEvent(false);
             setFormData({
-                id: project.id,
-                name: project.name,
-                description: project.description,
-                status: project.status,
-                dateOfCompletion: project.dateOfCompletion,
-                dateOfCreation: project.dateOfCreation
+                id: event.id,
+                name: event.name,
+                description: event.description,
+                status: event.status.toString(),
+                date: format(new Date(event.date), "yyyy-MM-dd'T'HH:mm"),
+                location: event.location,
+                dateOfCompletion: event.dateOfCompletion ? 
+                    format(new Date(event.dateOfCompletion), "yyyy-MM-dd'T'HH:mm") : null,
+                dateOfCreation: event.dateOfCreation
             });
             
-            const existingUsers = project.userProjects?.map(up => ({
-                userId: up.userId,
-                role: up.role,
-                username: up.username
+            const existingUsers = event.userEvents?.map(ue => ({
+                userId: ue.userId,
+                role: ue.role,
+                username: ue.username
             })) || [];
             
-            const existingProducts = project.productProjects?.map(pp => ({
-                productId: pp.productId,
-                productName: pp.productName
+            const existingProjects = event.eventProjects?.map(ep => ({
+                projectId: ep.projectId,
+                projectName: ep.projectName
             })) || [];
 
             setSelectedUsers(existingUsers);
-            setSelectedProducts(existingProducts);
+            setSelectedProjects(existingProjects);
         } else {
             resetForm();
         }
-    }, [project]);
+    }, [event]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         
-        const projectPayload = {
-            id: project?.id,
+        const eventPayload = {
+            id: formData.id,
             name: formData.name,
             description: formData.description,
             status: parseInt(formData.status),
-            dateOfCompletion: formData.dateOfCompletion,
+            date: new Date(formData.date).toISOString(),
+            location: formData.location,
+            dateOfCompletion: formData.dateOfCompletion ? 
+                new Date(formData.dateOfCompletion).toISOString() : null,
             dateOfCreation: formData.dateOfCreation,
-            userProjects: selectedUsers.map(user => ({
+            userEvents: selectedUsers.map(user => ({
                 userId: parseInt(user.userId),
                 role: user.role,
                 username: user.username
             })),
-            productProjects: selectedProducts.map(product => ({
-                productId: parseInt(product.productId),
-                productName: product.productName
+            eventProjects: selectedProjects.map(project => ({
+                projectId: parseInt(project.projectId),
+                projectName: project.projectName
             }))
         };
 
         try {
-            if (isNewProject) {
-                await NewProject(dispatch, projectPayload);
+            if (isNewEvent) {
+                await NewEvent(dispatch, eventPayload);
             } else {
-                await EditProject(dispatch, projectPayload);
+                await EditEvent(dispatch, eventPayload);
             }
             resetForm();
             if (onComplete) {
@@ -100,20 +109,20 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
             }
             setIsEditing(false);
         } catch (error) {
-            console.error('Error submitting project:', error);
+            console.error('Error submitting event:', error);
         }
     };
 
     const handleDelete = async () => {
         try {
-            await DeleteProject(dispatch, project);
+            await DeleteEvent(dispatch, formData);
             resetForm();
             if (onComplete) {
                 onComplete();
             }
             setIsEditing(false);
         } catch (error) {
-            console.error('Error deleting project:', error);
+            console.error('Error deleting event:', error);
         }
     };
 
@@ -136,7 +145,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
         if (!selectedUsers.some(u => u.userId === parseInt(userId))) {
             setSelectedUsers([...selectedUsers, {
                 userId: parseInt(userId),
-                role: 'Member',
+                role: 'Participant',
                 username
             }]);
         }
@@ -152,22 +161,22 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
         ));
     };
 
-    const handleAddProduct = (productId) => {
-        const product = products.find(p => p.id === parseInt(productId));
-        if (product && !selectedProducts.some(p => p.productId === parseInt(productId))) {
-            setSelectedProducts(prev => [...prev, {
-                productId: parseInt(productId),
-                productName: product.name
+    const handleAddProject = (projectId) => {
+        const project = projects.find(p => p.id === parseInt(projectId));
+        if (project && !selectedProjects.some(p => p.projectId === parseInt(projectId))) {
+            setSelectedProjects(prev => [...prev, {
+                projectId: parseInt(projectId),
+                projectName: project.name
             }]);
         }
     };
 
-    const handleRemoveProduct = (productId) => {
-        setSelectedProducts(prev => prev.filter(p => p.productId !== productId));
+    const handleRemoveProject = (projectId) => {
+        setSelectedProjects(prev => prev.filter(p => p.projectId !== projectId));
     };
 
-    if (!users.length || !products.length) {
-        return <div>Loading users and products...</div>;
+    if (!users.length || !projects.length) {
+        return <div>Loading users and projects...</div>;
     }
 
     return (
@@ -175,7 +184,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
             <Row className="mb-3">
                 <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Project Name</Form.Label>
+                        <Form.Label>Event Name</Form.Label>
                         <Form.Control
                             type="text"
                             name="name"
@@ -194,12 +203,38 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
                             value={formData.status}
                             onChange={handleInputChange}
                         >
-                            <option value={ProjectStatus.NotStarted}>Not Started</option>
-                            <option value={ProjectStatus.InProgress}>In Progress</option>
-                            <option value={ProjectStatus.Completed}>Completed</option>
-                            <option value={ProjectStatus.OnHold}>On Hold</option>
-                            <option value={ProjectStatus.Cancelled}>Cancelled</option>
+                            <option value={EventStatus.Planned}>Planned</option>
+                            <option value={EventStatus.Ongoing}>Ongoing</option>
+                            <option value={EventStatus.Completed}>Completed</option>
+                            <option value={EventStatus.Cancelled}>Cancelled</option>
                         </Form.Control>
+                    </Form.Group>
+                </Col>
+            </Row>
+
+            <Row className="mb-3">
+                <Col md={6}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Date and Time</Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            name="date"
+                            value={formData.date}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </Form.Group>
+                </Col>
+                <Col md={6}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Location</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="location"
+                            value={formData.location}
+                            onChange={handleInputChange}
+                            required
+                        />
                     </Form.Group>
                 </Col>
             </Row>
@@ -218,7 +253,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
             <Row className="mb-3">
                 <Col md={6}>
                     <Form.Group>
-                        <Form.Label>Add Team Members</Form.Label>
+                        <Form.Label>Add Participants</Form.Label>
                         <Form.Control
                             as="select"
                             onChange={(e) => {
@@ -250,8 +285,8 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
                                             onChange={(e) => handleUserRoleChange(user.userId, e.target.value)}
                                             style={{ width: 'auto' }}
                                         >
-                                            <option value="Owner">Owner</option>
-                                            <option value="Member">Member</option>
+                                            <option value="Organizer">Organizer</option>
+                                            <option value="Participant">Participant</option>
                                         </Form.Control>
                                     </div>
                                     <Button 
@@ -269,31 +304,31 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
 
                 <Col md={6}>
                     <Form.Group>
-                        <Form.Label>Add Products</Form.Label>
+                        <Form.Label>Add Related Projects</Form.Label>
                         <Form.Control
                             as="select"
-                            onChange={(e) => handleAddProduct(e.target.value)}
+                            onChange={(e) => handleAddProject(e.target.value)}
                             value=""
                         >
-                            <option value="">Select Product...</option>
-                            {products.map((product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
+                            <option value="">Select Project...</option>
+                            {projects.map((project) => (
+                                <option key={project.id} value={project.id}>
+                                    {project.name}
                                 </option>
                             ))}
                         </Form.Control>
 
                         <ListGroup className="mt-2">
-                            {selectedProducts.map((product) => (
+                            {selectedProjects.map((project) => (
                                 <ListGroup.Item 
-                                    key={product.productId} 
+                                    key={project.projectId} 
                                     className="d-flex justify-content-between align-items-center"
                                 >
-                                    {product.productName}
+                                    {project.projectName}
                                     <Button 
                                         variant="danger" 
                                         size="sm"
-                                        onClick={() => handleRemoveProduct(product.productId)}
+                                        onClick={() => handleRemoveProject(project.projectId)}
                                     >
                                         Remove
                                     </Button>
@@ -305,9 +340,9 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
             </Row>
 
             <div className="d-flex justify-content-end gap-2">
-                {isNewProject ? (
+                {isNewEvent ? (
                     <Button variant="primary" type="submit">
-                        Create Project
+                        Create Event
                     </Button>
                 ) : (
                     <>
@@ -327,4 +362,4 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
     );
 };
 
-export default ProjectForm;
+export default EventForm;

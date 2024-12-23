@@ -5,11 +5,20 @@ import { Table } from 'react-bootstrap';
 
 const ProjectListView = () => {
     const dispatch = useDispatch();
-    const projects = useSelector(state => state.projectsReducer?.projects || [] );
-
+    const projects = useSelector(state => state.projects.projects); 
+    const error = useSelector(state => state.projects.error); 
+    console.log('PROJECTS IN LIST VIEW',projects);
     useEffect(() => {
         GetProjects(dispatch);
     }, [dispatch]);
+
+    if (error) {
+        return <div>Error loading projects: {error}</div>;
+    }
+
+    if (!projects || projects.length === 0) {
+        return <div>Loading projects...</div>;
+    }
 
     return (
         <Table striped bordered hover responsive>
@@ -17,47 +26,21 @@ const ProjectListView = () => {
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Users & Roles</th>
-                    <th>Products</th>
-                    <th>Events</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {projects.length === 0 ? (
-                    <tr>
-                        <td colSpan="5" className="text-center">
-                            No projects available.
+                {projects.map((project) => (
+                    <tr key={project.id}>
+                        <td>{project.name}</td>
+                        <td>{project.description}</td>
+                        <td>{project.status}</td>
+                        <td>
+                            <button>Edit</button>
                         </td>
                     </tr>
-                ) : (
-                    projects.map((project) => (
-                        <tr key={project.id}>
-                            <td>{project.name}</td>
-                            <td>{project.description}</td>
-                            <td>
-                                {project.UserProjects.map((userProject) => (
-                                    <div key={userProject.id}>
-                                        {userProject.User.name}: {userProject.Role}
-                                    </div>
-                                ))}
-                            </td>
-                            <td>
-                                {project.ProductProjects.map((productProject) => (
-                                    <div key={productProject.id}>
-                                        {productProject.Product.name}
-                                    </div>
-                                ))}
-                            </td>
-                            <td>
-                                {project.EventProjects.map((eventProject) => (
-                                    <div key={eventProject.id}>
-                                        {eventProject.Event.name}
-                                    </div>
-                                ))}
-                            </td>
-                        </tr>
-                    ))
-                )}
+                ))}
             </tbody>
         </Table>
     );

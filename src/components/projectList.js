@@ -1,46 +1,97 @@
-import {React, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetProjects } from '../services/projects';
-import {Button, Row, Col} from 'react-bootstrap';
-import ProjectForm from './ProjectForm';
+import { Table, Button, Badge } from 'react-bootstrap';
 
-
-const ProjectList = () => {
+const ProjectList = ({ setIsEditing, setSelectedProject }) => {
     const dispatch = useDispatch();
-    const projects = useSelector(state => state.projectsSlice.projects);
+    const projects = useSelector(state => state.projectsSlice?.projects || [] );
+    console.log('PROJECTS ON Project List',projects)
+    const error = useSelector(state => state.projectsSlice.error);
 
     useEffect(() => {
-         GetProjects(dispatch);
+        GetProjects(dispatch);
     }, [dispatch]);
 
-    console.log("Projects in list : ", projects);
+    const handleEdit = (project) => {
+        if (!project || !project.id) {
+            console.error('Invalid project data:', project);
+            return;
+        }
+        console.log('Editing project:', project);
+        setSelectedProject(project);
+        setIsEditing(true);
+    };
 
-    return projects.map(e => 
-        <div style = {{ marginBottom : '1rem' }} key={e.id}> 
-            <ListRow project = {e} />
-        </div>
-    ) ;
+    const getStatusDisplay = (status) => {
+        const statusMap = {
+            0: { text: 'Not Started', variant: 'secondary' },
+            1: { text: 'In Progress', variant: 'primary' },
+            2: { text: 'Completed', variant: 'success' },
+            3: { text: 'On Hold', variant: 'warning' },
+            4: { text: 'Cancelled', variant: 'danger' }
+        };
+        
+        const statusInfo = statusMap[status] || { text: 'Unknown', variant: 'secondary' };
+        return (
+            <Badge bg={statusInfo.variant}>
+                {statusInfo.text}
+            </Badge>
+        );
+    };
+
+    if (error) {
+        return <div className="alert alert-danger">
+            {typeof error === 'object' ? error.message || 'An error occurred' : error}
+        </div>;
+    }
+
+    console.log('Current projects in component:', projects); 
+
+    return (
+        <Table striped bordered hover responsive>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Team Members</th>
+                    <th>Products</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {(!projects || projects.length === 0) ? (
+                    <tr>
+                        <td colSpan="6" className="text-center">No projects available.</td>
+                    </tr>
+                ) : (
+                    projects.map((project) => (
+                        <tr key={project.id}>
+                            <td>{project.name}</td>
+                            <td>{project.description}</td>
+                            <td>{getStatusDisplay(project.status)}</td>
+                            <td>
+                                {project.userProjects?.map(up => up.username).join(', ') || 'No team members'}
+                            </td>
+                            <td>
+                                {project.productProjects?.map(pp => pp.productName).join(', ') || 'No products'}
+                            </td>
+                            <td>
+                                <Button
+                                    variant="info"
+                                    size="sm"
+                                    onClick={() => handleEdit(project)}
+                                >
+                                    Edit
+                                </Button>
+                            </td>
+                        </tr>
+                    ))
+                )}
+            </tbody>
+        </Table>
+    );
 };
 
-const ListRow = ({project}) => {
-    const [isEditing, setIsEditing] = useState(false);
-    console.log("Project object in ListRow:", project);
-    return  isEditing 
-    ? 
-    <ProjectForm project = {project} setIsEditing = {setIsEditing}/> 
-    :
-    (
-        <div>
-            <Row>
-                <Col>{project.name}</Col>
-                <Col>{project.description}</Col>
-                <Col>{project.quantity}</Col>
-                <Col><Button variant = "warning" onClick = {() => setIsEditing(!isEditing)}> Edit </Button></Col>
-            </Row>
-            <hr/>
-
-        </div>
-    );
-}
-
-export default ProjectList; 
+export default ProjectList;
