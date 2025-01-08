@@ -35,37 +35,6 @@ export const ProjectStatus = {
     Cancelled: 4
 };
 
-export const NewProject = async (dispatch, project) => {
-    try {
-        const projectData = {
-            name: project.name,
-            description: project.description,
-            status: parseInt(ProjectStatus[project.status]) || 0,
-            dateOfCompletion: project.dateOfCompletion,
-            userProjects: project.userProjects.map(user => ({
-                userId: user.userId,
-                role: user.role,
-                username: user.username
-
-            })),
-            productProjects: project.productProjects.map(product => ({
-                productId: product.productId,
-                productName: product.productName
-            }))
-        };
-        
-        console.log('Sending project data:', projectData);
-        
-        const response = await axiosInstance.post('/', projectData);
-        console.log('Project creation response:', response.data);
-        dispatch(newProjects(response.data));
-        return response.data;
-    } catch (error) {
-        console.error('Project creation error:', error.response?.data || error);
-        dispatch(newProjectsError(error.response?.data || error.message));
-        throw error;
-    }
-};
 export const GetProjects = async (dispatch) => {
     try {
         const response = await axiosInstance.get('/');
@@ -84,6 +53,40 @@ export const GetProjects = async (dispatch) => {
     }
 };
 
+
+
+
+export const NewProject = async (dispatch, project) => {
+    try {
+        const projectData = {
+            name: project.name,
+            description: project.description,
+            status: parseInt(project.status) || 0,
+            dateOfCompletion: project.dateOfCompletion,
+            userProjects: (project.userProjects || []).map(user => ({
+                userId: user.userId,
+                role: user.role,
+                username: user.username
+            })),
+            productProjects: (project.projectProducts || []).map(product => ({  // Changed property name to match backend
+                productId: parseInt(product.productId),
+                productName: product.productName
+            }))
+        };
+        
+        console.log('Sending project data:', projectData);
+        
+        const response = await axiosInstance.post('/', projectData);
+        console.log('Project creation response:', response.data);
+        dispatch(newProjects(response.data));
+        return response.data;
+    } catch (error) {
+        console.error('Project creation error:', error.response?.data || error);
+        dispatch(newProjectsError(error.response?.data || error.message));
+        throw error;
+    }
+};
+
 export const EditProject = async (dispatch, project) => {
     try {
         if (!project.id) {
@@ -97,12 +100,12 @@ export const EditProject = async (dispatch, project) => {
             status: parseInt(project.status),
             dateOfCreation: project.dateOfCreation,
             dateOfCompletion: project.dateOfCompletion,
-            userProjects: project.userProjects.map(user => ({
+            userProjects: (project.userProjects || []).map(user => ({
                 userId: parseInt(user.userId),
                 role: user.role,
                 username: user.username
             })),
-            productProjects: project.productProjects.map(product => ({
+            productProjects: (project.projectProducts || []).map(product => ({  // Changed property name to match backend
                 productId: parseInt(product.productId),
                 productName: product.productName
             }))
@@ -123,6 +126,13 @@ export const EditProject = async (dispatch, project) => {
         throw error;
     }
 };
+
+
+
+
+
+
+
 
 export const DeleteProject = async (dispatch, project) => {
     try {

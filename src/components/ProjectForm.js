@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Table, Row, Col, ListGroup } from 'react-bootstrap';
+import { Form, Button, Row, Col, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { NewProject, EditProject, DeleteProject } from '../services/projects';
 import { GetUsers } from '../services/users';
 import { GetProducts } from '../services/products';
-import { ProjectStatus } from '../services/projectStatus';
+import { ProjectStatus } from '../services/projects';
+import { format } from 'date-fns';
 
 const ProjectForm = ({ project, setIsEditing, onComplete }) => {
     const initialFormState = {
@@ -13,7 +14,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
         status: ProjectStatus.NotStarted.toString(),
         dateOfCompletion: null,
         userProjects: [],
-        productProjects: []
+        projectProducts: []
     };
 
     const [formData, setFormData] = useState(initialFormState);
@@ -44,22 +45,22 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
                 id: project.id,
                 name: project.name,
                 description: project.description,
-                status: project.status,
+                status: project.status.toString(),
                 dateOfCompletion: project.dateOfCompletion,
                 dateOfCreation: project.dateOfCreation
             });
             
-            const existingUsers = project.userProjects?.map(up => ({
-                userId: up.userId,
-                role: up.role,
-                username: up.username
+            const existingUsers = project.userProjects?.map(ue => ({
+                userId: ue.userId,
+                role: ue.role,
+                username: ue.username
             })) || [];
             
             const existingProducts = project.productProjects?.map(pp => ({
                 productId: pp.productId,
                 productName: pp.productName
             })) || [];
-
+    
             setSelectedUsers(existingUsers);
             setSelectedProducts(existingProducts);
         } else {
@@ -71,23 +72,23 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
         event.preventDefault();
         
         const projectPayload = {
-            id: project?.id,
+            id: formData.id,
             name: formData.name,
             description: formData.description,
             status: parseInt(formData.status),
             dateOfCompletion: formData.dateOfCompletion,
             dateOfCreation: formData.dateOfCreation,
-            userProjects: selectedUsers.map(user => ({
+            userProjects: selectedUsers.map(user => ({  
                 userId: parseInt(user.userId),
                 role: user.role,
                 username: user.username
             })),
-            productProjects: selectedProducts.map(product => ({
+            projectProducts: selectedProducts.map(product => ({
                 productId: parseInt(product.productId),
                 productName: product.productName
             }))
         };
-
+    
         try {
             if (isNewProject) {
                 await NewProject(dispatch, projectPayload);
@@ -106,7 +107,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
 
     const handleDelete = async () => {
         try {
-            await DeleteProject(dispatch, project);
+            await DeleteProject(dispatch, formData);
             resetForm();
             if (onComplete) {
                 onComplete();
@@ -136,7 +137,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
         if (!selectedUsers.some(u => u.userId === parseInt(userId))) {
             setSelectedUsers([...selectedUsers, {
                 userId: parseInt(userId),
-                role: 'Member',
+                role: 'Participant',
                 username
             }]);
         }
@@ -218,7 +219,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
             <Row className="mb-3">
                 <Col md={6}>
                     <Form.Group>
-                        <Form.Label>Add Team Members</Form.Label>
+                        <Form.Label>Add Participants</Form.Label>
                         <Form.Control
                             as="select"
                             onChange={(e) => {
@@ -269,7 +270,7 @@ const ProjectForm = ({ project, setIsEditing, onComplete }) => {
 
                 <Col md={6}>
                     <Form.Group>
-                        <Form.Label>Add Products</Form.Label>
+                        <Form.Label>Add Related Products</Form.Label>
                         <Form.Control
                             as="select"
                             onChange={(e) => handleAddProduct(e.target.value)}

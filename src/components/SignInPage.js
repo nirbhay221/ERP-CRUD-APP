@@ -52,7 +52,7 @@ const SignInPage = () => {
             <Button type = 'submit' variant = 'primary' style = {{
                 margin : 'auto', display : 'block', width : '10rem'
             }} >
-                SignIn
+                Sign In
             </Button>
         </Form>
 

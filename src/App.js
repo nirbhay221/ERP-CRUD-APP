@@ -17,6 +17,8 @@ import Dashboard from "./components/Dashboard";
 import { userAuthenticated } from "./app/authenticationSlice";
 import ProductForm from "./components/ProductForm";
 import ProductsPage from "./components/ProductsPage";
+import ProjectsPage from "./components/ProjectsPage";
+import EventsPage from "./components/EventsPage";
 
 const App = () => {
   const isLoggedIn = useSelector((state) =>
@@ -45,7 +47,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="flex">
-        <div
+        {isLoggedIn ? <><div
           className={`bg-gray-900 min-h-screen ${
             open ? "w-72" : "w-16"
           } duration-500 text-gray-100 px-4`}
@@ -87,7 +89,7 @@ const App = () => {
               </Link>
             ))}
           </div>
-        </div>
+        </div></> : <></>}
 
         <div className="flex-1 bg-gray-100">
           <Navbar />
@@ -100,6 +102,14 @@ const App = () => {
             <Route
               path="/products"
               element={isLoggedIn ? <ProductsPage/> : <SignUpPage />}
+            />
+            <Route
+              path="/projects"
+              element={isLoggedIn ? <ProjectsPage/> : <SignUpPage />}
+            />
+            <Route
+              path="/events"
+              element={isLoggedIn ? <EventsPage/> : <SignUpPage />}
             />
             <Route
               path="/signin"
